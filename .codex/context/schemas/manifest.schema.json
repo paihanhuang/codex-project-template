@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/codex/context/manifest.schema.json",
+  "title": "Codex Context Manifest",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "generated_at",
+    "extractor_version",
+    "config_hash",
+    "files"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "context-manifest/v1"
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "git_head": {
+      "type": ["string", "null"]
+    },
+    "extractor_version": {
+      "type": "string"
+    },
+    "config_hash": {
+      "type": "string"
+    },
+    "files": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/file"
+      }
+    }
+  },
+  "$defs": {
+    "file": {
+      "type": "object",
+      "required": [
+        "source_id",
+        "path",
+        "hash",
+        "size_bytes",
+        "mtime_utc",
+        "kind",
+        "index_status"
+      ],
+      "properties": {
+        "source_id": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string"
+        },
+        "hash": {
+          "type": "string"
+        },
+        "size_bytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "mtime_utc": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "kind": {
+          "enum": ["code", "document", "config", "data", "binary", "unknown"]
+        },
+        "language": {
+          "type": ["string", "null"]
+        },
+        "index_status": {
+          "enum": ["indexed", "ignored", "failed", "pending"]
+        },
+        "ignore_reason": {
+          "type": ["string", "null"]
+        },
+        "git_status": {
+          "type": ["string", "null"]
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,79 @@
+{
+  "schema_version": "context-capsule/v1",
+  "capsule_id": "sample-template-stage1",
+  "created_at": "2026-05-15T00:00:00Z",
+  "task": {
+    "query": "Explain the template's current large-context workflow and Stage 1 context-capsule integration points.",
+    "intent": "design",
+    "scope": "Codex V-Model template workflow files"
+  },
+  "token_budget": 12000,
+  "freshness": {
+    "status": "manual",
+    "checked_at": "2026-05-15T00:00:00Z",
+    "notes": "Manual Stage 1 sample. It demonstrates shape only and must not be treated as a generated freshness guarantee."
+  },
+  "sources": [
+    {
+      "source_id": "src-agents",
+      "path": "AGENTS.md",
+      "source_type": "workflow",
+      "hash": "manual-stage1",
+      "anchors": ["Phase 0.5 Context Indexing", "Agents"]
+    },
+    {
+      "source_id": "src-workflow",
+      "path": ".codex/docs/workflow-reference.md",
+      "source_type": "workflow",
+      "hash": "manual-stage1",
+      "anchors": ["Phase 0.5 Context Indexing"]
+    },
+    {
+      "source_id": "src-prompts",
+      "path": ".codex/docs/prompt-templates.md",
+      "source_type": "workflow",
+      "hash": "manual-stage1",
+      "anchors": ["Agent Prompt Templates"]
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "ev-current-phase-05",
+      "source_path": "AGENTS.md",
+      "source_anchor": "Phase 0.5 Context Indexing",
+      "retrieval_layers": ["manual"],
+      "confidence": "high",
+      "token_estimate": 140,
+      "summary": "The template routes large codebase or document tasks through Phase 0.5 before spawning agents or doing broad local work."
+    },
+    {
+      "evidence_id": "ev-workflow-details",
+      "source_path": ".codex/docs/workflow-reference.md",
+      "source_anchor": "Phase 0.5 Context Indexing",
+      "retrieval_layers": ["manual"],
+      "confidence": "high",
+      "token_estimate": 220,
+      "summary": "The detailed workflow distinguishes small direct reads, medium markdown indexes, and large context-index plus capsule generation."
+    },
+    {
+      "evidence_id": "ev-prompt-integration",
+      "source_path": ".codex/docs/prompt-templates.md",
+      "source_anchor": "Context Capsule fields",
+      "retrieval_layers": ["manual"],
+      "confidence": "medium",
+      "token_estimate": 120,
+      "summary": "Prompt templates include a context capsule field so architect, engineer, and QA agents can share selected evidence."
+    }
+  ],
+  "gaps": [
+    "This is a hand-authored sample, not output from a retrieval command.",
+    "No generated manifest or SQLite index exists in Stage 1.",
+    "Implementation tasks must still read raw files before editing."
+  ],
+  "suggested_raw_reads": [
+    "AGENTS.md",
+    ".codex/docs/workflow-reference.md",
+    ".codex/docs/prompt-templates.md",
+    ".codex/context.toml"
+  ]
+}

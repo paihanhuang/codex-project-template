@@ -1,7 +1,15 @@
 # Project verification script for Windows/PowerShell.
-# Customize for each project.
 # Exit 0 = pass. Non-zero = verification failed.
 
 $ErrorActionPreference = "Stop"
 
-Write-Output "No verification configured. Edit verify.ps1 to add linting, type-checking, or tests."
+$python = Get-Command python3 -ErrorAction SilentlyContinue
+if (-not $python) {
+    $python = Get-Command python -ErrorAction SilentlyContinue
+}
+if (-not $python) {
+    throw "Python is required for context artifact validation."
+}
+
+& $python.Source ".codex/tools/validate-context-artifacts.py"
+& $python.Source -m unittest discover -s ".codex/evals/context" -p "test_*.py"

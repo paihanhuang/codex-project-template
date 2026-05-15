@@ -1,0 +1,168 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/codex/context/capsule.schema.json",
+  "title": "Codex Context Capsule",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "capsule_id",
+    "created_at",
+    "task",
+    "token_budget",
+    "freshness",
+    "sources",
+    "evidence",
+    "gaps",
+    "suggested_raw_reads"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "context-capsule/v1"
+    },
+    "capsule_id": {
+      "type": "string"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "task": {
+      "type": "object",
+      "required": ["query", "intent"],
+      "properties": {
+        "query": {
+          "type": "string"
+        },
+        "intent": {
+          "enum": ["answer", "design", "implementation", "review", "verification"]
+        },
+        "scope": {
+          "type": ["string", "null"]
+        }
+      },
+      "additionalProperties": false
+    },
+    "token_budget": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "freshness": {
+      "type": "object",
+      "required": ["status", "checked_at"],
+      "properties": {
+        "status": {
+          "enum": ["fresh", "stale", "manual", "unknown"]
+        },
+        "checked_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "notes": {
+          "type": ["string", "null"]
+        }
+      },
+      "additionalProperties": false
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/source"
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/evidence"
+      }
+    },
+    "gaps": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "suggested_raw_reads": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "$defs": {
+    "source": {
+      "type": "object",
+      "required": ["source_id", "path", "source_type", "hash", "anchors"],
+      "properties": {
+        "source_id": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string"
+        },
+        "source_type": {
+          "enum": ["code", "document", "config", "workflow", "unknown"]
+        },
+        "hash": {
+          "type": "string"
+        },
+        "anchors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "evidence": {
+      "type": "object",
+      "required": [
+        "evidence_id",
+        "source_path",
+        "source_anchor",
+        "retrieval_layers",
+        "confidence",
+        "token_estimate",
+        "summary"
+      ],
+      "properties": {
+        "evidence_id": {
+          "type": "string"
+        },
+        "source_path": {
+          "type": "string"
+        },
+        "source_anchor": {
+          "type": "string"
+        },
+        "retrieval_layers": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "manual",
+              "path",
+              "lexical",
+              "metadata",
+              "symbol",
+              "semantic",
+              "graph",
+              "rerank"
+            ]
+          }
+        },
+        "confidence": {
+          "enum": ["high", "medium", "low"]
+        },
+        "token_estimate": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "summary": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

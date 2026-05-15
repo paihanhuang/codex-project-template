@@ -66,8 +66,12 @@ Never summarize when the prompt template says verbatim.
 ## Phase 0.5: Context Indexing
 
 If the task involves a large codebase or many documents, scan relevant sources
-and write structured index files to `.codex/index/` before spawning agents.
-Check staleness before reuse. Skip for tasks scoped to 1-3 known files.
+and write structured index files to `.codex/index/`, or use the project context
+settings in `.codex/context.toml` to generate a context capsule under
+`.codex/context/capsules/`, before spawning agents or doing broad local work.
+Pass capsule paths and only the minimum needed raw files to agents. Check
+freshness before reuse. Implementation work must read raw files before editing.
+Skip indexing for tasks scoped to 1-3 known files.
 
 ## Plan Archival
 

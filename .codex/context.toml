@@ -1,0 +1,62 @@
+# Context indexing defaults for large codebases and document archives.
+# Generated indexes live under .codex/context/ and should remain local unless a
+# project explicitly opts into hosted services.
+
+[sources]
+code_roots = ["."]
+document_roots = []
+include = []
+exclude = [
+  ".git/**",
+  ".codex/context/manifest.json",
+  ".codex/context/inventory.sqlite",
+  ".codex/context/cache/**",
+  ".codex/context/tmp/**",
+  ".codex/context/vectors/**",
+  ".codex/context/graph/**",
+  ".codex/worktrees/**",
+  "**/__pycache__/**",
+  "**/*.pyc",
+  "node_modules/**",
+  "dist/**",
+  "build/**",
+  "coverage/**",
+  ".env",
+  ".env.*",
+  "**/*.key",
+  "**/*.pem",
+  "**/*.p12",
+  "**/*.pfx"
+]
+follow_symlinks = false
+
+[retrieval]
+lexical_backend = "sqlite-fts5"
+vector_backend = "off"
+graph_backend = "off"
+rerank = "off"
+top_k_initial = 80
+top_k_capsule = 20
+
+[chunking.code]
+strategy = "tree-sitter-symbols-with-fallback"
+max_chunk_tokens = 900
+overlap_tokens = 120
+
+[chunking.docs]
+strategy = "section-aware"
+max_chunk_tokens = 700
+overlap_tokens = 100
+contextualize_chunks = false
+
+[capsules]
+output_dir = ".codex/context/capsules"
+default_token_budget = 12000
+require_fresh_for_edits = true
+include_retrieval_trace = true
+
+[privacy]
+local_only = true
+secret_scan = true
+hosted_vector_store = "disabled"
+allowed_external_services = []

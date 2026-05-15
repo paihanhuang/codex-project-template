@@ -8,21 +8,33 @@ For standardized custom agent prompts, see
 ## Phase 0.5: Context Indexing
 
 Before spawning agents, determine whether the task involves scanning a large
-codebase or many input documents. If so, create structured index files to
-prevent redundant scanning across agent spawns.
+codebase or many input documents. Use the smallest context path that gives
+reliable evidence without wasting tokens.
 
-When to index:
+Context paths:
+
+- Small: read the 1-3 known files directly.
+- Medium: scan focused sources and write markdown indexes under `.codex/index/`.
+- Large: use `.codex/context.toml` settings to refresh or reuse the project
+  context index, then generate a task-specific context capsule under
+  `.codex/context/capsules/`.
+
+When to use the large context path:
 
 - The task references more than about 10 files or multiple modules.
-- External documents, specs, requirements, or RFCs are provided as input.
-- The codebase is unfamiliar and this is the first task in it.
+- The task references a large archive of documents, specs, requirements, RFCs,
+  PDFs, or exported knowledge bases.
+- The codebase or archive is unfamiliar and broad discovery would otherwise be
+  repeated by multiple agents.
+- The user asks for efficient querying, reusable indexes, or token reduction.
 
 When to skip:
 
 - The task is scoped to 1-3 known files.
-- Index files already exist and sources have not changed since indexing.
+- The needed evidence is already present in the current conversation.
+- A current capsule or markdown index exists and its sources have not changed.
 
-Process:
+Medium process:
 
 1. Identify the relevant scope.
 2. Scan source files and documents.
@@ -42,9 +54,36 @@ scope: {what area/module this covers}
 constraints. Include only information agents need to make decisions.}
 ```
 
-Staleness protocol: before using an index file, compare its `indexed` date
-against modification times for files in its `source` list. If any source file is
-newer than the index, re-scan and update before passing it to agents.
+Large process:
+
+1. Read `.codex/context.toml` and identify relevant code/document roots.
+2. Check existing manifest and capsule artifacts under `.codex/context/`.
+3. If tooling exists for the project, refresh stale inventory, lexical, symbol,
+   document, vector, or graph indexes according to the configured backends.
+4. If tooling does not exist yet, create a manual capsule matching
+   `.codex/context/schemas/capsule.schema.json` and clearly mark freshness as
+   `manual` or `unknown`.
+5. Pass capsule paths to downstream agents instead of pasting bulky indexes.
+6. Include only the minimum raw file contents needed for the current stage.
+7. For implementation, read raw files before editing even when the capsule
+   identifies likely files.
+
+Capsule requirements:
+
+- task query and intent;
+- source paths and anchors;
+- retrieval layers used, such as `manual`, `path`, `lexical`, `metadata`,
+  `symbol`, `semantic`, `graph`, or `rerank`;
+- freshness status;
+- token budget or token estimate;
+- gaps, conflicts, or extraction warnings;
+- suggested raw files to read next.
+
+Staleness protocol: markdown indexes compare `indexed` dates against source
+modification times. Context manifests and capsules should use content hashes,
+Git HEAD, extractor version, and dirty-worktree overlays when tooling is
+available. If any source is newer, dirty, missing, or has an unknown freshness
+state for edit work, re-scan or read the raw source directly before proceeding.
 
 ## Phase 0.6: Research (Optional)
 
@@ -201,4 +240,3 @@ For each stage:
 5. Refresh stale context indexes before the next stage.
 
 After all stages pass, remove `.codex/plans/.approved` and `.codex/plans/.stage`.
-

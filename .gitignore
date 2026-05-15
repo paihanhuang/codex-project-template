@@ -4,6 +4,16 @@
 .codex/plans/current.md
 .codex/plans/session-state.md
 .codex/index/
+.codex/context/manifest.json
+.codex/context/inventory.sqlite
+.codex/context/*.sqlite
+.codex/context/*.sqlite-*
+.codex/context/cache/
+.codex/context/tmp/
+.codex/context/vectors/
+.codex/context/graph/
+.codex/context/capsules/*.generated.json
+.codex/context/capsules/*.generated.md
 .codex/agent-memory/*
 !.codex/agent-memory/*/
 !.codex/agent-memory/*/.gitkeep
@@ -17,3 +27,7 @@ Thumbs.db
 *.swp
 *.swo
 *~
+
+# Python
+__pycache__/
+*.pyc
