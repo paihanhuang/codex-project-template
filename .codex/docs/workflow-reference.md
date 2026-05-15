@@ -240,3 +240,17 @@ For each stage:
 5. Refresh stale context indexes before the next stage.
 
 After all stages pass, remove `.codex/plans/.approved` and `.codex/plans/.stage`.
+
+## Verification Timeout Pattern
+
+For longer Bash checks, use the OS-agnostic timeout pattern:
+
+```bash
+TIMEOUT_CMD=$(command -v timeout 2>/dev/null || command -v gtimeout 2>/dev/null || echo "")
+VERIFY_TIMEOUT="${VERIFY_TIMEOUT:-30}"
+if [[ -n "$TIMEOUT_CMD" ]]; then
+  "$TIMEOUT_CMD" "$VERIFY_TIMEOUT" ./verify.sh
+else
+  ./verify.sh
+fi
+```

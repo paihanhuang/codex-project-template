@@ -1,6 +1,9 @@
 # Claude to Codex Mapping
 
 This file documents how the original Claude Code template maps to Codex CLI.
+The repository root `AGENTS.md` intentionally keeps only startup-critical
+instructions; historical mapping details live here to avoid bloating every
+Codex session.
 
 | Claude template | Codex template | Notes |
 |-----------------|----------------|-------|
@@ -16,4 +19,3 @@ This file documents how the original Claude Code template maps to Codex CLI.
 
 Project-specific active plans, session-state files, and old agent-memory entries
 from the Claude repository were intentionally not copied into this template.
-

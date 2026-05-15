@@ -163,8 +163,40 @@ def validate_context_indexing_skill() -> None:
         raise AssertionError("context-indexing skill missing required rule/command: " + missing[0])
 
 
+def validate_agents_md() -> None:
+    agents_path = ROOT / "AGENTS.md"
+    if not agents_path.exists():
+        raise AssertionError("missing AGENTS.md")
+    text = agents_path.read_text(encoding="utf-8")
+    line_count = len(text.splitlines())
+    byte_count = len(text.encode("utf-8"))
+    if line_count > 100:
+        raise AssertionError(f"AGENTS.md is too long: {line_count} lines > 100")
+    if byte_count > 5000:
+        raise AssertionError(f"AGENTS.md is too large: {byte_count} bytes > 5000")
+
+    required_phrases = [
+        "Engineering Discipline",
+        "Clarify assumptions",
+        "Prefer simple code",
+        "Make surgical edits",
+        "Define verifiable goals",
+        "V-Model workflow only when the user explicitly asks",
+        "Phase 0: Clarity Gate",
+        "context-indexing",
+        ".codex/plans/.approved",
+        "## Memory Entry",
+        "Dual-verdict gate",
+        "./verify.sh",
+    ]
+    missing = [phrase for phrase in required_phrases if phrase not in text]
+    if missing:
+        raise AssertionError("AGENTS.md missing required concept: " + missing[0])
+
+
 def main() -> int:
     try:
+        validate_agents_md()
         validate_schema_files()
         validate_sample_capsule()
         validate_manifest_if_present()
